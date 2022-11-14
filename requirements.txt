@@ -1,0 +1,4 @@
+selenium
+pyqt5
+pillow
+sklearn

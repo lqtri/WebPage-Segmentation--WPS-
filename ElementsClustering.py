@@ -13,11 +13,13 @@ class Clustering:
         self.domRoot = domRoot
         
     def visual_distance(self, b1, b2):
-        x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
-        y_cor = (b1.y-b2.y)*(b1.y+b1.height-b2.y-b2.height)
-        dx = np.where(x_cor<=0,0,min(abs(b1.x-b2.x),abs(b1.x+b1.width-b2.x-b2.width)))
-        dy = np.where(y_cor<=0,0,min(abs(b1.y-b2.y),abs(b1.y+b1.height-b2.y-b2.height)))
-        return dx + dy
+        c1_x = b1.x+b1.width/2
+        c1_y = b1.y+b1.height/2
+        c2_x = b2.x+b2.width/2
+        c2_y = b2.y+b2.height/2
+        
+        clear_space = max(abs(c1_x-c2_x)-(b1.width+b2.width)/2, abs(c1_y-c2_y)-(b1.height+b2.height)/2)
+        return np.where(clear_space>0, clear_space, 0)
 
     def logic_distance(self, b1, b2):
         b1_path = []
@@ -65,7 +67,7 @@ class Clustering:
     def similarity_distance_matrix(self, blocks):
         n = len(blocks) 
         matrix = []
-        alpha = (self.pageWidth + self.pageHeight) / self.find_depth_tree(self.domRoot) / 2
+        alpha = self.pageWidth / self.find_depth_tree(self.domRoot)
         total_distance = 0
         valid_distance_count = 0
 
@@ -78,24 +80,20 @@ class Clustering:
                 if visual_distance < self.pageWidth/2:
                     valid_distance_count += 1
                     total_distance += visual_distance
-                if self.isAlign(blocks[i],blocks[j]):
-                  alignment_distance = 0.3
-                tmp_vector.append(visual_distance*(1-alignment_distance) + alpha*logic_distance)
+                tmp_vector.append(visual_distance + alpha*logic_distance)
             matrix.append(tmp_vector)
 
-        total_distance /= 2
-        valid_distance_count /= 2
-        avg_distance = total_distance / (valid_distance_count+1)
+        average_distance = total_distance / (valid_distance_count+1)
 
-        return np.array(matrix), avg_distance
+        return np.array(matrix), average_distance
 
-    def get_indices(self, list, value):
+    def get_indice(self, list, value):
         return [i for i,val in enumerate(list) if val==value]
 
     def get_elements(self, list, indices_list):
         return [list[i] for i in indices_list]
 
-    def merge_block(self,blocks_list):
+    def merge_blocks(self,blocks_list):
         x = min([block.x for block in blocks_list])
         y = min([block.y for block in blocks_list])
         width = max([block.width+block.x for block in blocks_list])
@@ -114,19 +112,15 @@ class Clustering:
         max_cluster_index = max(labels)
 
         #Add noise block
-        noise_block_indice = self.get_indices(labels,-1)
+        noise_block_indice = self.get_indice(labels,-1)
         new_blocks_list = self.get_elements(self.blocks, noise_block_indice)
 
         #Add cluster candidate
-        for i in range(max_cluster_index):
-            element_indices = self.get_indices(labels, i)
-            new_blocks_list.append(self.merge_block(self.get_elements(self.blocks, element_indices)))
+        for i in range(max_cluster_index+1):
+            element_indices = self.get_indice(labels, i)
+            new_blocks_list.append(self.merge_blocks(self.get_elements(self.blocks, element_indices)))
             
         self.blocks = new_blocks_list
-
-    def GMM(self, similarity_matrix):
-        gmm = GaussianMixture(n_components=5).fit(similarity_matrix)
-        return gmm
 
     ### STAGE 2
     def regrouping(self, blocks):

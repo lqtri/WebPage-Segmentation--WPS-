@@ -37,7 +37,7 @@ class Vips:
         self.recList = []
                
     def service(self):
-        print('Block Extraction')
+        print('\n[Block Extraction]')
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList

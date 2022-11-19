@@ -6,7 +6,7 @@ class ImageOut:
        
     def outImg(self, browser, url, screenshot_path="screenshot.png"):
         # Get dimensions
-        print('Getting Screenshot')
+        print('[Getting Screenshot]')
         default_width=1920
         default_height=1080
         print('+ Getting dimensions...')
@@ -22,7 +22,6 @@ class ImageOut:
         print('Done')
     
     def outBlock(self, block, fileName, i=0):
-        print(i)
         img = Image.open(fileName+'.png')
         dr = ImageDraw.Draw(img)
 

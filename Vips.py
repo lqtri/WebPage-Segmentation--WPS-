@@ -37,58 +37,12 @@ class Vips:
         self.recList = []
                
     def service(self):
-        print('-----------------------------Block Extraction------------------------------------')
+        print('Block Extraction')
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList
         self.imgOut.outBlock(blockList, self.fileName, 0)
         return blockList
-        '''
-        i = 0
-        while self.checkDoc(blockList) and i<self.Round:
-            print ("blockList.size::", len(blockList))
-            self.imgOut.outBlock(blockList, self.fileName,i)
-            ImageOut.outText(self.fileName, blockList, i)                    
-            print("-----------------------------Separator Detection---------------------------------"+str(i))
-            sd = SeparatorDetection(self.browser.get_window_size()['width'], self.browser.get_window_size()['height'])
-            verticalList = []
-            verticalList.extend(sd.service(blockList, SeparatorVo.TYPE_VERTICAL))
-            self.imgOut.outSeparator(verticalList, self.fileName, '_vertica_', i)
-            
-            horizList = []
-            horizList.extend(sd.service(blockList, SeparatorVo.TYPE_HORIZ))
-            self.imgOut.outSeparator(horizList, self.fileName,'_horizontal_', i)
-            
-            print("-----------------------Setting Weights for Separators----------------------------"+str(i))
-            hrList = be.hrList
-            sw = SeparatorWeight(self.nodeList)
-            sw.service(horizList, hrList)
-            sw.service(verticalList, hrList)
-            
-            print("-----------------------Content Structure Construction----------------------------"+str(i))
-            sepList = []
-            sepList.extend(horizList)
-            sepList.extend(verticalList)
-            sepList.sort(key=functools.cmp_to_key(Vips.sepCompare))
-            tempList = blockList
-            csc = ContentStructureConstruction()
-            csc.service(sepList, block)
-            BlockVo.refreshBlock(block)
-            blockList.clear()
-            be.filList(block)
-            blockList = be.blockList
-        
-            for newBlock in blockList:
-                for oldBlock in tempList:
-                    if newBlock.id == oldBlock.id:
-                        blockList.remove(newBlock)
-                        break
-            
-            #ImageOut.outText(self.fileName, blockList , 'test')
-            i+=1
-              
-        self.browser.quit()
-        '''
 
     def checkDoc(self, blocks):
         for blockVo in blocks:

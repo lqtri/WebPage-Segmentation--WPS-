@@ -22,19 +22,18 @@ class BlockExtraction:
         BlockRule.BlockRule.initialize(nodeList)
         body = nodeList[0]
         self.initBlock(body, self.block)  
-        print("-----Done Initialization-----")
+        print("+ Done Initialization")
         self.count3 = 0
         self.dividBlock(self.block)   
-        print("-----Done Division-----")
+        print("+ Done Division")
         BlockVo.BlockVo.refreshBlock(self.block)
-        print("-----Done Refreshing-----")
+        print("+ Done Refreshing")
         self.filList(self.block)
-        print("-----Done Filling-----")
+        print("+ Done Filling")
         return self.block
         
     def initBlock(self, box, block):
         block.boxs.append(box)
-        #print(self.count,"####Here Name=",box.nodeName)
         self.count+=1
             
         if(box.nodeName == "hr"):
@@ -45,7 +44,6 @@ class BlockExtraction:
             for b in subBoxList:
                 try:
                     if b.nodeName != "script" and b.nodeName != "noscript" and b.nodeName != "style":
-                        #print(self.count1," : ",b.nodeName,", ",box.nodeName)
                         self.count1+=1
                         bVo = BlockVo.BlockVo()
                         bVo.parent = block

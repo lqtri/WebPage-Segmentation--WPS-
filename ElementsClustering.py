@@ -60,7 +60,7 @@ class Clustering:
     def similarity_distance_matrix(self, blocks):
         n = len(blocks) 
         matrix = []
-        alpha = self.pageWidth / self.find_depth_tree(self.domRoot)
+        alpha = (self.pageWidth+self.pageHeight)/2 / self.find_depth_tree(self.domRoot)
         total_distance = 0
         valid_distance_count = 0
 

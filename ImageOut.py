@@ -30,13 +30,13 @@ class ImageOut:
                 # Initialize rectangle
                 cor = (blockVo.x,blockVo.y, blockVo.x + blockVo.width, blockVo.y + blockVo.height)
                 line = (cor[0],cor[1],cor[0],cor[3])
-                dr.line(line, fill="red", width=1)
+                dr.line(line, fill="red", width=4)
                 line = (cor[0],cor[1],cor[2],cor[1])
-                dr.line(line, fill="red", width=1)
+                dr.line(line, fill="red", width=4)
                 line = (cor[0],cor[3],cor[2],cor[3])
-                dr.line(line, fill="red", width=1)
+                dr.line(line, fill="red", width=4)
                 line = (cor[2],cor[1],cor[2],cor[3])
-                dr.line(line, fill="red", width=1)
+                dr.line(line, fill="red", width=4)
                 
                 # Set block ID font size 
                 font = ImageFont.truetype("iosevka-ss18.ttc", 15)

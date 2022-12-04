@@ -154,7 +154,7 @@ class BlockRule:
         return False
     
     
-    """ 
+    """
     Rule 1: If the DOM node is not a text node and it has no valid children, 
     then this node cannot be divided and will be cut.
     """

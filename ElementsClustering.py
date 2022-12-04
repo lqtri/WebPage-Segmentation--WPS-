@@ -3,13 +3,13 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 
 class Clustering:
-    def __init__(self, blocks, lim_v, lim_t, pageWidth, pageHeight, domRoot):
+    def __init__(self, blocks, pageWidth, pageHeight, domRoot):
         self.blocks = blocks
-        self.lim_v = lim_v  #the limit visual distance
-        self.lim_t = lim_t  #the limit text density distance
+        self.n = len(blocks)
         self.pageWidth = pageWidth
         self.pageHeight = pageHeight
         self.domRoot = domRoot
+        self.alpha = (self.pageWidth + self.pageHeight) / (2*self.find_depth_tree(self.domRoot))
 
     def visual_distance(self, b1, b2):
         x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
@@ -58,30 +58,29 @@ class Clustering:
         return 0 
 
     def similarity_distance_matrix(self, blocks):
-        n = len(blocks) 
-        matrix = []
-        alpha = (self.pageWidth+self.pageHeight)/2 / self.find_depth_tree(self.domRoot)
-        total_distance = 0
+        total_valid_distance = 0
         valid_distance_count = 0
 
-        for i in range(0,n):
-            tmp_vector = []
-            for j in range(0,n):
+        matrix = []
+        for i in range(0, self.n):
+            matrix.append([0]*self.n)
+        matrix = np.array(matrix)
+
+        for i in range(0,self.n):
+            for j in range(i+1,self.n):
                 visual_distance = self.visual_distance(blocks[i], blocks[j])
                 logic_distance = self.logic_distance(blocks[i],blocks[j])
                 if visual_distance < self.pageWidth/2:
                     valid_distance_count += 1
-                    total_distance += visual_distance
+                    total_valid_distance += visual_distance
                     
                 alignment_distance = self.isAlign(blocks[i],blocks[j])
-                dist = visual_distance + alpha*(logic_distance - alignment_distance)
-                if dist < 0:tmp_vector.append(0)
-                else:tmp_vector.append(dist)
-            matrix.append(tmp_vector)
+                dist = visual_distance * (1+self.n/self.alpha) + self.alpha*(logic_distance - alignment_distance)
+                
+                matrix[i][j] = matrix[j][i] = np.where(dist>0, dist, 0)
 
-        average_distance = total_distance / (valid_distance_count+1)
-
-        return np.array(matrix), average_distance
+        average_distance = total_valid_distance / (valid_distance_count+1)
+        return matrix, average_distance
 
     def get_indice(self, list, value):
         return [i for i,val in enumerate(list) if val==value]

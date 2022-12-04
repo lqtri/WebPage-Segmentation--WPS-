@@ -23,8 +23,7 @@ def main():
     pageHeight = vips.nodeList[0].visual_cues['bounds']['height']
     print('Page width: ', pageWidth, ', Page height: ', pageHeight,'\n')
 
-    cluster = Clustering(blocks, 1, 1, pageWidth, pageHeight, vips.nodeList[0])
-    cluster.DBSCAN()
+    cluster = Clustering(blocks, pageWidth, pageHeight, vips.nodeList[0])
     cluster.DBSCAN()
      
     imgOut = ImageOut()

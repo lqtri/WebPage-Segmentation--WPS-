@@ -9,7 +9,7 @@ class Clustering:
         self.pageWidth = pageWidth
         self.pageHeight = pageHeight
         self.domRoot = domRoot
-        self.alpha = (self.pageWidth + self.pageHeight) / (2*self.find_depth_tree(self.domRoot))
+        self.alpha = self.pageWidth /self.find_depth_tree(self.domRoot)
 
     def visual_distance(self, b1, b2):
         x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
@@ -32,7 +32,7 @@ class Clustering:
             temp2 = temp2.parent
         
         idx = b1_path.index(temp2)
-        return abs(step-idx)
+        return abs(step+idx)
 
     ### STAGE 1
     def find_depth_tree(self, root):
@@ -70,7 +70,7 @@ class Clustering:
             for j in range(i+1,self.n):
                 visual_distance = self.visual_distance(blocks[i], blocks[j])
                 logic_distance = self.logic_distance(blocks[i],blocks[j])
-                if visual_distance < self.pageWidth/2:
+                if visual_distance < self.pageWidth:
                     valid_distance_count += 1
                     total_valid_distance += visual_distance
                     
@@ -102,7 +102,7 @@ class Clustering:
     def DBSCAN(self):
         similarity_matrix, average_distance = self.similarity_distance_matrix(self.blocks)
 
-        clustering = DBSCAN(eps = average_distance ,min_samples=1, algorithm='brute' ,metric='precomputed').fit(similarity_matrix)
+        clustering = DBSCAN(eps = average_distance ,min_samples=2, algorithm='brute' ,metric='precomputed').fit(similarity_matrix)
         labels = clustering.labels_
         max_cluster_index = max(labels)
 

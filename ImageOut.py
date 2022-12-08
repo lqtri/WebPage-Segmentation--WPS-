@@ -10,14 +10,12 @@ class ImageOut:
         default_width=1920
         default_height=1080
         print('+ Getting dimensions...')
-        browser.set_window_size(default_width, default_height)
         browser.get(url)
         total_height = browser.execute_script("return document.body.parentNode.scrollHeight")
     
         # Get screenshot
         print('+ Getting screenshot...')
         browser.set_window_size(default_width, total_height)
-        browser.get(url)
         browser.save_screenshot(screenshot_path+'.png')
         print('Done')
     

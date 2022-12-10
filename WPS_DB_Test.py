@@ -1,5 +1,5 @@
 import sys
-import Vips
+import WPS_DB as Wpsdb
 from ImageOut import ImageOut
 from urllib.parse import unquote
 from ElementsClustering import Clustering
@@ -15,22 +15,22 @@ def main():
         print("Number of arguments is invalid!")
         return
 
-    vips = Vips.Vips(unquote(sys.argv[1], encoding="utf-8"))
-    vips.setRound(10)
-    blocks = vips.service()
+    wpsdb = Wpsdb.Wpsdb(unquote(sys.argv[1], encoding="utf-8"))
+    wpsdb.setRound(10)
+    blocks = wpsdb.service()
 
     for block in blocks:
         print(block.width, " ", block.height)
 
-    pageWidth = vips.nodeList[0].visual_cues['bounds']['width']
-    pageHeight = vips.nodeList[0].visual_cues['bounds']['height']
+    pageWidth = wpsdb.nodeList[0].visual_cues['bounds']['width']
+    pageHeight = wpsdb.nodeList[0].visual_cues['bounds']['height']
     print('Page width: ', pageWidth, ', Page height: ', pageHeight,'\n')
 
-    cluster = Clustering(blocks, pageWidth, pageHeight, vips.nodeList[0])
+    cluster = Clustering(blocks, pageWidth, pageHeight, wpsdb.nodeList[0])
     cluster.DBSCAN()
      
     imgOut = ImageOut()
-    imgOut.outBlock(cluster.blocks, vips.fileName,1)
+    imgOut.outBlock(cluster.blocks, wpsdb.fileName,1)
     print(len(blocks)," clusters ---> ",len(cluster.blocks), " clusters")
 
 main()

@@ -15,7 +15,7 @@ from CssBox import CssBox
 from DomNode import DomNode
 
 
-class Vips:
+class Wpsdb:
     PDoc = 1
     Round = 1
     url = None

@@ -190,10 +190,10 @@ class BlockRule:
         result = True
         cnt = 0
         
-        for vipsBlock in block.children:
-            if vipsBlock.boxs[0].nodeName == node.nodeName:
+        for WpsdbBlock in block.children:
+            if WpsdbBlock.boxs[0].nodeName == node.nodeName:
                 result = True
-                BlockRule.isOnlyOneDomSubTree(node, vipsBlock.boxs[0],result)
+                BlockRule.isOnlyOneDomSubTree(node, WpsdbBlock.boxs[0],result)
                 
                 if result:
                     cnt+=1

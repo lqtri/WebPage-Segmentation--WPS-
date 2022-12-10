@@ -1,6 +1,6 @@
 import uuid
 import BlockRule
-import Vips
+import WPS_DB
 
 class BlockVo:
     

@@ -5,4 +5,4 @@ This is WPS-DB, our webpage segmentation method, different from other method lik
 
 ### Usage
 - Install independencies: `pip install -r requirments.txt`
-- Run WPS-DB: `python WPS_DB_Test.py <your webpage link>`
+- Run WPS-DB: `python WPS_DB_Test.py <Your webpage URL>`

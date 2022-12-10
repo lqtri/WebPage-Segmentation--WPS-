@@ -1,15 +1,27 @@
 import math
 import numpy as np
+import copy as cp
 from sklearn.cluster import DBSCAN
 
 class Clustering:
     def __init__(self, blocks, pageWidth, pageHeight, domRoot):
         self.blocks = blocks
+        self.outlier_blocks = self.cleanse()
         self.n = len(blocks)
         self.pageWidth = pageWidth
         self.pageHeight = pageHeight
         self.domRoot = domRoot
-        self.alpha = self.pageWidth /self.find_depth_tree(self.domRoot)
+        self.dynamic_distance = np.where(self.pageHeight<self.pageWidth, self.pageWidth, self.pageHeight)
+        self.alpha = (self.dynamic_distance) /self.find_depth_tree(self.domRoot)
+        print('alpha: ',self.alpha)
+    
+    def cleanse(self):
+        outlier_blocks = []
+        for block in self.blocks:
+            if block.width <= 1 or block.height <= 1:
+                outlier_blocks.append(cp.deepcopy(block))
+                self.blocks.remove(block)
+        return outlier_blocks
 
     def visual_distance(self, b1, b2):
         x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
@@ -32,7 +44,7 @@ class Clustering:
             temp2 = temp2.parent
         
         idx = b1_path.index(temp2)
-        return abs(step+idx)
+        return abs(step+idx-1)
 
     ### STAGE 1
     def find_depth_tree(self, root):
@@ -46,16 +58,18 @@ class Clustering:
         return max_depth + 1
 
     def isAlign(self, b1, b2):
-        if (abs(b2.x - b1.x) <= 5): return 1
-        elif (abs(b2.x+b2.width - b1.x) <= 5): return 1
-        elif (abs(b2.x - b1.x-b1.width) <= 5): return 1
-        elif (abs(b2.x +b2.width- b1.x-b1.width) <= 5): return 1
+        res =0
+        if (abs(b2.x - b1.x) <= 2): res+= 0.8
+        elif (abs(b2.x +b2.width- b1.x-b1.width) <= 2): res+= 0.8
 
-        elif (abs(b2.y - b1.y) <= 5): return 1
-        elif (abs(b2.y + b2.height- b1.y) <= 5): return 1
-        elif (abs(b2.y - b1.y-b1.height) <= 5): return 1
-        elif (abs(b2.y +b2.height- b1.y - b1.height) <= 5): return 1
-        return 0 
+        elif (abs(b2.y - b1.y) <= 2): res+= 0.8
+        elif (abs(b2.y +b2.height- b1.y - b1.height) <= 2): res+= 0.8
+
+        if res == 0.8:
+          if b2.width == b1.width : res+=0.2
+          if b2.height == b1.height: res+=0.2
+
+        return res
 
     def similarity_distance_matrix(self, blocks):
         total_valid_distance = 0
@@ -68,14 +82,14 @@ class Clustering:
 
         for i in range(0,self.n):
             for j in range(i+1,self.n):
-                visual_distance = self.visual_distance(blocks[i], blocks[j])
+                visual_distance = self.visual_distance(blocks[i], blocks[j])* self.n/self.alpha
                 logic_distance = self.logic_distance(blocks[i],blocks[j])
-                if visual_distance < self.pageWidth:
+                if visual_distance < self.dynamic_distance/2:
                     valid_distance_count += 1
                     total_valid_distance += visual_distance
                     
                 alignment_distance = self.isAlign(blocks[i],blocks[j])
-                dist = visual_distance * (1+self.n/self.alpha) + self.alpha*(logic_distance - alignment_distance)
+                dist = visual_distance + self.alpha*(logic_distance *(2-alignment_distance)/2)
                 
                 matrix[i][j] = matrix[j][i] = np.where(dist>0, dist, 0)
 

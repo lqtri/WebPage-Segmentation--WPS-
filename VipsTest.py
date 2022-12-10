@@ -19,6 +19,9 @@ def main():
     vips.setRound(10)
     blocks = vips.service()
 
+    for block in blocks:
+        print(block.width, " ", block.height)
+
     pageWidth = vips.nodeList[0].visual_cues['bounds']['width']
     pageHeight = vips.nodeList[0].visual_cues['bounds']['height']
     print('Page width: ', pageWidth, ', Page height: ', pageHeight,'\n')

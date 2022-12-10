@@ -11,8 +11,7 @@ class Clustering:
         self.pageWidth = pageWidth
         self.pageHeight = pageHeight
         self.domRoot = domRoot
-        self.dynamic_distance = np.where(self.pageHeight<self.pageWidth, self.pageWidth, self.pageHeight)
-        self.alpha = (self.dynamic_distance) /self.find_depth_tree(self.domRoot)
+        self.alpha = (self.pageHeight) /self.find_depth_tree(self.domRoot)
         print('alpha: ',self.alpha)
     
     def cleanse(self):
@@ -84,7 +83,7 @@ class Clustering:
             for j in range(i+1,self.n):
                 visual_distance = self.visual_distance(blocks[i], blocks[j])* self.n/self.alpha
                 logic_distance = self.logic_distance(blocks[i],blocks[j])
-                if visual_distance < self.dynamic_distance/2:
+                if visual_distance < self.pageHeight/2:
                     valid_distance_count += 1
                     total_valid_distance += visual_distance
                     
@@ -94,6 +93,7 @@ class Clustering:
                 matrix[i][j] = matrix[j][i] = np.where(dist>0, dist, 0)
 
         average_distance = total_valid_distance / (valid_distance_count+1)
+        print('Epsilon: ', average_distance)
         return matrix, average_distance
 
     def get_indice(self, list, value):
@@ -115,7 +115,6 @@ class Clustering:
 
     def DBSCAN(self):
         similarity_matrix, average_distance = self.similarity_distance_matrix(self.blocks)
-
         clustering = DBSCAN(eps = average_distance ,min_samples=2, algorithm='brute' ,metric='precomputed').fit(similarity_matrix)
         labels = clustering.labels_
         max_cluster_index = max(labels)

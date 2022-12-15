@@ -3,7 +3,6 @@ import BlockRule
 import WPS_DB
 
 class BlockVo:
-    
     id = None
     x = 0
     y = 0
@@ -27,7 +26,6 @@ class BlockVo:
     def refresh(self):
         for i in range(0, len(self.boxs)):
             box = self.boxs[i]
-            #print (box.get_attribute("id"),",",box.tag_name,",",box.location)
             if i == 0:
                 self.x = box.visual_cues['bounds']['x']
                 self.y = box.visual_cues['bounds']['y']

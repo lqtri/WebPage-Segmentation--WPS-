@@ -4,19 +4,20 @@ from PIL import Image, ImageDraw, ImageFont
 
 class ImageOut:
        
-    def outImg(self, browser, url, screenshot_path="screenshot.png"):
-        # Get dimensions
-        print('[Getting Screenshot]')
+    def outImg(self, browser, url, path="screenshot.png"):
         default_width=1920
         default_height=1080
-        print('+ Getting dimensions...')
+
         browser.get(url)
         total_height = browser.execute_script("return document.body.parentNode.scrollHeight")
-    
-        # Get screenshot
-        print('+ Getting screenshot...')
+
+        # Get page source
+        f = open(path+"_source.html","w")
+        f.write(browser.page_source)
+        f.close()
+
         browser.set_window_size(default_width, total_height)
-        browser.save_screenshot(screenshot_path+'.png')
+        browser.save_screenshot(path+'.png')
         print('Done')
     
     def outBlock(self, block, fileName, i=0):

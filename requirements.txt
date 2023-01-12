@@ -1,4 +1,11 @@
+numpy
 selenium
 pyqt5
 pillow
 sklearn
+htmldiff
+genshi
+html5lib
+beaufifulsoup4
+lxml
+command

@@ -32,5 +32,4 @@ def main():
     imgOut = ImageOut()
     imgOut.outBlock(cluster.blocks, wpsdb.fileName,1)
     print(len(blocks)," clusters ---> ",len(cluster.blocks), " clusters")
-
 main()

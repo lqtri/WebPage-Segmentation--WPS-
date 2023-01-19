@@ -23,13 +23,17 @@ class BlockExtraction:
         body = nodeList[0]
         self.initBlock(body, self.block)  
         print("+ Done Initialization")
+
         self.count3 = 0
         self.dividBlock(self.block)   
         print("+ Done Division")
+
         BlockVo.BlockVo.refreshBlock(self.block)
         print("+ Done Refreshing")
+        
         self.filList(self.block)
         print("+ Done Filling")
+
         return self.block
         
     def initBlock(self, box, block):

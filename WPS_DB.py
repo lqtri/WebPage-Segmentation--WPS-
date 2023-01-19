@@ -31,8 +31,8 @@ class Wpsdb:
     def __init__(self, urlStr):
         self.setUrl(urlStr)
         self.setDriver()
-        self.imgOut = ImageOut()
-        self.imgOut.outImg(self.browser, self.url, self.fileName)
+        # self.imgOut = ImageOut()
+        # self.imgOut.outImg(self.browser, self.url, self.fileName)
         self.getDomTree()
         self.recList = []
                
@@ -41,7 +41,7 @@ class Wpsdb:
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList
-        self.imgOut.outBlock(blockList, self.fileName, 0)
+        # self.imgOut.outBlock(blockList, self.fileName, 0)
         return blockList
 
     def checkDoc(self, blocks):
@@ -111,9 +111,14 @@ class Wpsdb:
                         print('abnormal text node')
                     
         return node
+    
+    def toHTMLFile(self, page_source):
+        with open("page_source.html", "w") as file:
+            file.write(str(page_source))
         
     def getDomTree(self):
         self.browser.get(self.url) 
+        self.toHTMLFile(self.browser.page_source)
         time.sleep(3)      
 
         file = open("dom.js", 'r')

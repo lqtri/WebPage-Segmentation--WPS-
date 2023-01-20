@@ -64,8 +64,8 @@ class Wpsdb:
             print ("Invalid address: " + str(urlStr))
       
     def setDriver(self):
-        CHROME_PATH = r"/usr/bin/google-chrome-stable"  # chrome path
-        CHROMEDRIVER_PATH = r"/usr/lib/chromium-browser/chromedriver" # driver path
+        CHROME_PATH = r"C/Program Files/oogle/hrome/Application/"  # chrome path
+        CHROMEDRIVER_PATH = r"C/Program Files/oogle/hrome/Application/chrome.exe" # driver path
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
         chrome_options.add_argument('--no-sandbox')

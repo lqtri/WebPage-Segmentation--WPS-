@@ -37,7 +37,6 @@ class Wpsdb:
         self.recList = []
                
     def service(self):
-        print('\n[Block Extraction]')
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList
@@ -68,14 +67,12 @@ class Wpsdb:
         CHROMEDRIVER_PATH = r"/usr/lib/chromium-browser/chromedriver" # driver path
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
         self.browser = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
         
 
     def toDOM(self, obj, parentNode=None):
         if (isinstance(obj,str)):
-            json_obj = json.loads(obj)  #use json lib to load our json string
+            json_obj = json.loads(obj) 
         else:
             json_obj = obj
         nodeType = json_obj['nodeType']
@@ -111,9 +108,14 @@ class Wpsdb:
                         print('abnormal text node')
                     
         return node
+    
+    def toHTMLFile(self, page_source):
+        with open("page_source.html", "w") as file:
+            file.write(str(page_source))
         
     def getDomTree(self):
         self.browser.get(self.url) 
+        self.toHTMLFile(self.browser.page_source)
         time.sleep(3)      
 
         file = open("dom.js", 'r')

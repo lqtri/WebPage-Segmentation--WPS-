@@ -2,4 +2,6 @@
 /images
 /__pycache__
 /*.html
-/.xml
+/*.xml
+/*.png
+/*.json

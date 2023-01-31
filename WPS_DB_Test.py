@@ -6,6 +6,8 @@ from ElementsClustering import Clustering
 from sklearn.cluster import DBSCAN
 import numpy as np
 
+import ContentExtractor as CE
+
 def main():
     num_of_arg = len(sys.argv)
     if num_of_arg < 2:
@@ -16,11 +18,7 @@ def main():
         return
 
     wpsdb = Wpsdb.Wpsdb(unquote(sys.argv[1], encoding="utf-8"))
-    wpsdb.setRound(10)
     blocks = wpsdb.service()
-
-    for block in blocks:
-        print(block.width, " ", block.height)
 
     pageWidth = wpsdb.nodeList[0].visual_cues['bounds']['width']
     pageHeight = wpsdb.nodeList[0].visual_cues['bounds']['height']
@@ -31,5 +29,11 @@ def main():
      
     imgOut = ImageOut()
     imgOut.outBlock(cluster.blocks, wpsdb.fileName,1)
+
+    ## Print result
     print(len(blocks)," clusters ---> ",len(cluster.blocks), " clusters")
+
+    ce = CE.ContentExtractor(wpsdb.browser, cluster.blocks)
+    ce.contentExtracting();
+
 main()

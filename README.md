@@ -11,6 +11,4 @@ Testing for Stack Overflow (Questions tab): https://stackoverflow.com/questions
 
 `pip install -r requirments.txt`
 
-- Run WPS-DB: 
-
-`python WPS_DB_Test.py <Your webpage URL>`
+- Run WPS-DB: Download our Jupyter notebook and run your testing

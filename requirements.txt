@@ -9,3 +9,4 @@ html5lib
 beaufifulsoup4
 lxml
 command
+difflib

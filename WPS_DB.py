@@ -31,17 +31,16 @@ class Wpsdb:
     def __init__(self, urlStr):
         self.setUrl(urlStr)
         self.setDriver()
-        # self.imgOut = ImageOut()
-        # self.imgOut.outImg(self.browser, self.url, self.fileName)
+        self.imgOut = ImageOut()
+        self.imgOut.outImg(self.browser, self.url, self.fileName)
         self.getDomTree()
         self.recList = []
                
     def service(self):
-        print('\n[Block Extraction]')
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList
-        # self.imgOut.outBlock(blockList, self.fileName, 0)
+        self.imgOut.outBlock(blockList, self.fileName, 0)
         return blockList
 
     def checkDoc(self, blocks):
@@ -68,14 +67,12 @@ class Wpsdb:
         CHROMEDRIVER_PATH = r"/usr/lib/chromium-browser/chromedriver" # driver path
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
         self.browser = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
         
 
     def toDOM(self, obj, parentNode=None):
         if (isinstance(obj,str)):
-            json_obj = json.loads(obj)  #use json lib to load our json string
+            json_obj = json.loads(obj) 
         else:
             json_obj = obj
         nodeType = json_obj['nodeType']

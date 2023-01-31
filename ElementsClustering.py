@@ -12,7 +12,6 @@ class Clustering:
         self.pageHeight = pageHeight
         self.domRoot = domRoot
         self.alpha = (self.pageHeight) /self.find_depth_tree(self.domRoot)
-        print('alpha: ',self.alpha)
     
     def cleanse(self):
         outlier_blocks = []
@@ -129,3 +128,4 @@ class Clustering:
             new_blocks_list.append(self.merge_blocks(self.get_elements(self.blocks, element_indices)))
             
         self.blocks = new_blocks_list
+        return labels

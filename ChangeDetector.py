@@ -1,6 +1,7 @@
 import os
 import json
 import numpy as np
+from urllib.parse import urlparse
 from difflib import SequenceMatcher
 from PIL import Image, ImageDraw
 
@@ -27,8 +28,9 @@ class ChangeDetector:
         return diff_blocks_ratio
 
     def changesVisualizing(self):
+        short_url = urlparse(self.content2['url']).netloc
         folder_path = os.listdir("./Screenshots")[-1]
-        image_path = "Screenshots/" + folder_path + "/" + os.listdir("./Screenshots/" + folder_path)[-3]
+        image_path = "Screenshots/" + folder_path + "/" + short_url + "_Block_1.png"
         img = Image.open(image_path)
         img_draw = ImageDraw.Draw(img)
 
@@ -38,7 +40,7 @@ class ChangeDetector:
             paste_mask = new_img.split()[3].point(lambda i: i * (1-ratio))
             img.paste(new_img, (int(position[0]), int(position[1])), mask = paste_mask)
             
-        img.save(os.listdir("./Screenshots/" + folder_path)[-1][:-4] + "_compared.png")
+        img.save(short_url + "_compared.png")
 
 
 def main():

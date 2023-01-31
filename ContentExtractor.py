@@ -3,7 +3,8 @@ import os
 from os import path
 
 class ContentExtractor:
-    def __init__(self, webdriver, blocks):
+    def __init__(self, url, webdriver, blocks):
+        self.url = url
         self.webdriver = webdriver
         self.blocks = blocks
 
@@ -19,7 +20,7 @@ class ContentExtractor:
         return content
     
     def contentExtracting(self):
-        data = {"page_content" : []}
+        data = {"url" : self.url, "page_content" : []}
         for i in range(len(self.blocks)):
             content = self.getContent(self.blocks[i])
             data["page_content"].append({"block_id" : i, "position" : (self.blocks[i].x, self.blocks[i].y, self.blocks[i].width, self.blocks[i].height), "content" : content})

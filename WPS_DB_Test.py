@@ -33,7 +33,7 @@ def main():
     ## Print result
     print(len(blocks)," clusters ---> ",len(cluster.blocks), " clusters")
 
-    ce = CE.ContentExtractor(wpsdb.browser, cluster.blocks)
+    ce = CE.ContentExtractor(sys.argv[1], wpsdb.browser, cluster.blocks)
     ce.contentExtracting();
 
 main()

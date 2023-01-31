@@ -5,6 +5,11 @@ This is WPS-DB, our webpage segmentation method, different from other method lik
 
 Testing for Stack Overflow (Questions tab): https://stackoverflow.com/questions
 ![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/main/images/stackoverflow.png?raw=true)
+![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/main/images/stackoverflow.com_compared.png?raw=true)
+
+Testing for Stack Exchange: https://stackexchange.com
+![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/main/images/stackoverexchange.com.png?raw=true)
+![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/main/images/stackoverexchange.com_compared.png?raw=true)
 
 ### Usage
 - Install independencies: 

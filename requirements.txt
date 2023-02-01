@@ -6,7 +6,5 @@ sklearn
 htmldiff
 genshi
 html5lib
-beaufifulsoup4
-lxml
-command
+beautifulsoup4
 difflib

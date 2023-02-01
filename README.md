@@ -8,8 +8,8 @@ Testing for Stack Overflow (Questions tab): https://stackoverflow.com/questions
 ![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackoverflow.com_compared.png?raw=true)
 
 Testing for Stack Exchange: https://stackexchange.com
-![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackoverexchange.com.png?raw=true)
-![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackoverexchange.com_compared.png?raw=true)
+![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackexchange.com.png?raw=true)
+![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackexchange.com_compared.png?raw=true)
 
 ### Usage
 - Install independencies: 

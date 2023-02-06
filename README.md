@@ -12,7 +12,8 @@ Testing for Stack Exchange: https://stackexchange.com
 ![](https://github.com/lqtri/WebPage-Segmentation--WPS-/blob/dev-xmldiff/images/stackexchange.com_compared.png?raw=true)
 
 ### Testing on more pages (using Block-O-Matic's dataset)
-Please visit this site to view the results.
+Please visit this site to view the results:
+
 https://drive.google.com/drive/folders/1uEAfsyFiR82Vejc26fgoWBLR1VpSaI-b?usp=sharing
 
 ### Usage

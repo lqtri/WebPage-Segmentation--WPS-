@@ -20,4 +20,6 @@ https://drive.google.com/drive/folders/1uEAfsyFiR82Vejc26fgoWBLR1VpSaI-b?usp=sha
 - Install independencies: 
 `pip install -r requirments.txt`
 
-- Run WPS-DB: Download our Jupyter Notebook and run your testing
+- Run WPS-DB: 
+    - Download our Jupyter Notebook and run your testing
+    - Use commmand: 'python3 WPS_DB_Test.py <your webpage's url>'

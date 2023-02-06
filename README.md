@@ -22,4 +22,4 @@ https://drive.google.com/drive/folders/1uEAfsyFiR82Vejc26fgoWBLR1VpSaI-b?usp=sha
 
 - Run WPS-DB: 
     - Download our Jupyter Notebook and run your testing
-    - Use commmand: 'python3 WPS_DB_Test.py <your webpage's url>'
+    - Use command: `python3 WPS_DB_Test.py <your webpage's url>`

@@ -18,12 +18,13 @@ class ChangeDetector:
         diff_blocks_ratio = []
         for i in range(n2):
             ratio = 0.
-            for j in [-1,0,1]:
+            for j in range(-5,6): # means that we are executing comparison by epsilon = 5
                 cmp_block_id = i + j
-                if cmp_block_id < 0 or cmp_block_id >= n1: break
+                if cmp_block_id < 0 or cmp_block_id >= n1: continue
                 tmp_ratio = SequenceMatcher(None, self.content2['page_content'][i]['content'], self.content1['page_content'][cmp_block_id]['content']).ratio()
-                if ratio < tmp_ratio:
+                if tmp_ratio > ratio:
                     ratio = tmp_ratio
+                print(ratio)
             diff_blocks_ratio.append(ratio)        
         return diff_blocks_ratio
 

@@ -5,6 +5,8 @@ from urllib.parse import unquote
 from ElementsClustering import Clustering
 from sklearn.cluster import DBSCAN
 import numpy as np
+from urllib.parse import urlparse
+from datetime import datetime
 
 import ContentExtractor as CE
 
@@ -26,12 +28,9 @@ def main():
 
     cluster = Clustering(blocks, pageWidth, pageHeight, wpsdb.nodeList[0])
     cluster.DBSCAN()
-     
+    
     imgOut = ImageOut()
-    imgOut.outBlock(cluster.blocks, wpsdb.fileName,1)
-
-    ## Print result
-    print(len(blocks)," clusters ---> ",len(cluster.blocks), " clusters")
+    imgOut.outBlock(cluster.blocks, wpsdb.fileName, 1)
 
     ce = CE.ContentExtractor(sys.argv[1], wpsdb.browser, cluster.blocks)
     ce.contentExtracting();

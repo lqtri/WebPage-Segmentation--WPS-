@@ -21,7 +21,7 @@ function toJSON(node) {
     var length = attrs.length;
     var arr = obj.attributes = new Array(length);
     for (var i = 0; i < length; i++) {
-      attr = attrs[i];
+      arr[i] = attrs[i];
     }
   }
   var childNodes = node.childNodes;

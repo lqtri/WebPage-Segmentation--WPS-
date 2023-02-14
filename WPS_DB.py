@@ -115,7 +115,6 @@ class Wpsdb:
         
     def getDomTree(self):
         self.browser.get(self.url) 
-        self.toHTMLFile(self.browser.page_source)
         time.sleep(3)      
 
         file = open("dom.js", 'r')

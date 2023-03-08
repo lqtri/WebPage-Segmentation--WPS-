@@ -57,23 +57,17 @@ class Clustering:
 
     def isAlign(self, b1, b2):
         res =0
-        if (abs(b2.x - b1.x) <= 2): 
-            res+= 1
-            if (abs(b2.x +b2.width- b1.x-b1.width) <= 2): res+= 1
-        
-        if (abs(b2.x +b2.width - b1.x) <= 2): res+= 1
-        if (abs(b2.x - b1.x-b1.width) <= 2): res+= 1
+        if (abs(b2.x - b1.x) <= 2): res+= 0.8
+        elif (abs(b2.x +b2.width- b1.x-b1.width) <= 2): res+= 0.8
 
-        if (abs(b2.y - b1.y) <= 2): 
-            res+= 1
-            if (abs(b2.y +b2.height- b1.y - b1.height) <= 2): res+= 1
+        elif (abs(b2.y - b1.y) <= 2): res+= 0.8
+        elif (abs(b2.y +b2.height- b1.y - b1.height) <= 2): res+= 0.8
 
-        if (abs(b2.y - b1.y - b1.height) <= 2): res+= 1
-        if (abs(b2.y +b2.height - b1.y) <= 2): res+= 1
+        if res == 0.8:
+          if b2.width == b1.width : res+=0.2
+          if b2.height == b1.height: res+=0.2
 
-        if res == 1: return 1
-        elif res == 2: return 1.2
-        return 0
+        return res
 
     def similarity_distance_matrix(self, blocks):
         total_valid_distance = 0

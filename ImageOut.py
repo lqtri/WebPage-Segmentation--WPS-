@@ -12,7 +12,7 @@ class ImageOut:
         total_height = browser.execute_script("return document.body.parentNode.scrollHeight")
 
         # Get page source
-        f = open(path+"_source.html","w")
+        f = open(path+"_source.html","w", encoding = "utf-8")
         f.write(browser.page_source)
         f.close()
 

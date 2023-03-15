@@ -24,15 +24,20 @@ def main():
 
     pageWidth = wpsdb.nodeList[0].visual_cues['bounds']['width']
     pageHeight = wpsdb.nodeList[0].visual_cues['bounds']['height']
-    print('Page width: ', pageWidth, ', Page height: ', pageHeight,'\n')
 
+    print("Blocks clustering...")
     cluster = Clustering(blocks, pageWidth, pageHeight, wpsdb.nodeList[0])
+    print("+ Alpha: ", cluster.alpha)
+    print("+ DBSCAN...")
     cluster.DBSCAN()
+    print("Done!\n")
     
     imgOut = ImageOut()
     imgOut.outBlock(cluster.blocks, wpsdb.fileName, 1)
 
+    print("Content extracting...")
     ce = CE.ContentExtractor(sys.argv[1], wpsdb.browser, cluster.blocks)
-    ce.contentExtracting();
+    ce.contentExtracting()
+    print("Done!\n")
 
 main()

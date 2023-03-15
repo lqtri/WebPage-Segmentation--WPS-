@@ -30,16 +30,33 @@ class Wpsdb:
     
     def __init__(self, urlStr):
         self.setUrl(urlStr)
+        
+        print("Web driver setting...")
         self.setDriver()
+        print("Done!\n")
+
+        print("Web page image shooting...")
         self.imgOut = ImageOut()
         self.imgOut.outImg(self.browser, self.url, self.fileName)
+        print("Done!\n")
+
+        print("Web page DOM tree getting...")
         self.getDomTree()
+        print("Done!\n")
+
         self.recList = []
                
     def service(self):
+        print("Block extracting...")
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
+
         blockList = be.blockList
+        ## Print blocks
+        for i in range(len(blockList)):
+            print("Block ", i, " | x: ", blockList[i].x, ", y: ", blockList[i].y, ", width: ", blockList[i].width, ", height: ", blockList[i].height)
+        print("Done!\n")
+
         self.imgOut.outBlock(blockList, self.fileName, 0)
         return blockList
 

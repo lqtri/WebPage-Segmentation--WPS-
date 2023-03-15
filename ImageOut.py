@@ -18,7 +18,6 @@ class ImageOut:
 
         browser.set_window_size(default_width, total_height)
         browser.save_screenshot(path+'.png')
-        print('Done')
     
     def outBlock(self, block, fileName, i=0):
         img = Image.open(fileName+'.png')

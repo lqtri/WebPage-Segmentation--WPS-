@@ -26,15 +26,15 @@ class ContentExtractor:
             data["page_content"].append({"block_id" : i, "position" : (self.blocks[i].x, self.blocks[i].y, self.blocks[i].width, self.blocks[i].height), "content" : content})
         json_data = json.dumps(data, indent=4)
         
-        if path.exists("content1.json") and path.exists("content2.json"):
-            with open("content1.json", "w") as file:
+        if path.exists("pageversion_1.json") and path.exists("pageversion_2.json"):
+            with open("pageversion_1.json", "w") as file:
                 file.write(json_data)
-            os.remove("content2.json")
-        elif path.exists("content1.json"):
-            with open("content2.json", "w") as file:
+            os.remove("pageversion_2.json")
+        elif path.exists("pageversion_1.json"):
+            with open("pageversion_2.json", "w") as file:
                 file.write(json_data)
         else:
-            with open("content1.json", "w") as file:
+            with open("pageversion_1.json", "w") as file:
                 file.write(json_data)
 
 

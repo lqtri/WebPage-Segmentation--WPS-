@@ -21,6 +21,5 @@ function getElementsInRegion(x, y, width, height) {
             }
         }
     }
-
     return elements;
 }

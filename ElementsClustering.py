@@ -122,6 +122,28 @@ class Clustering:
         blocks_list[0].height = height-y
         return blocks_list[0]
 
+    def checkInside(self, b2, b1):
+        if b2.x > b1.x and b2.y > b1.y and b2.x + b2.width < b1.x + b1.width and b2.y + b2.height < b1.y + b1.height:
+            return True
+        return False
+    
+    def insideBlocksRemove(self):
+        i = 0
+        while i < self.n - 1:
+            j = i + 1
+            while j < self.n:
+                if self.checkInside(self.blocks[i], self.blocks[j]):
+                    self.blocks.pop(i)
+                    i -= 1
+                    self.n -= 1
+                    break
+                elif self.checkInside(self.blocks[j], self.blocks[j]):
+                    self.blocks.pop(j)
+                    j -= 1
+                    self.n -= 1
+                j += 1
+            i += 1
+
     def DBSCAN(self):
         similarity_matrix, average_distance = self.similarity_distance_matrix(
             self.blocks)
@@ -141,4 +163,9 @@ class Clustering:
                 self.get_elements(self.blocks, element_indices)))
 
         self.blocks = new_blocks_list
+        self.n = len(new_blocks_list)
+
+        # Remove blocks which inside other
+        self.insideBlocksRemove()
+
         return labels

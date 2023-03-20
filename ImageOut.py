@@ -9,15 +9,15 @@ class ImageOut:
         default_height=1080
 
         browser.get(url)
+        time.sleep(5)
         total_height = browser.execute_script("return document.body.parentNode.scrollHeight")
+        browser.set_window_size(default_width, total_height)
+        browser.save_screenshot(path+'.png')
 
         # Get page source
         f = open(path+"_source.html","w", encoding = "utf-8")
         f.write(browser.page_source)
         f.close()
-
-        browser.set_window_size(default_width, total_height)
-        browser.save_screenshot(path+'.png')
     
     def outBlock(self, block, fileName, i=0):
         img = Image.open(fileName+'.png')

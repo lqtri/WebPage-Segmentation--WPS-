@@ -31,6 +31,10 @@ def main():
     print("+ DBSCAN...")
     cluster.DBSCAN()
     print("Done!\n")
+
+    print("Segmentation blocks\n")
+    for i in range(len(cluster.blocks)):
+        print(cluster.blocks[i].x, ", ", cluster.blocks[i].y, ", ", cluster.blocks[i].width, ", ", cluster.blocks[i].height)
     
     imgOut = ImageOut()
     imgOut.outBlock(cluster.blocks, wpsdb.fileName, 1)

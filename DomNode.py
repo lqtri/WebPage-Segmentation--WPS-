@@ -1,5 +1,13 @@
 class DomNode:
-    __slots__ = ('nodeType','tagName', 'nodeName' , 'nodeValue', 'visual_cues', 'attributes', 'childNodes','parentNode')
+    __slots__ = (
+        'nodeType',
+        'tagName', 
+        'nodeName', 
+        'nodeValue', 
+        'visual_cues', 
+        'attributes', 
+        'childNodes',
+        'parentNode')
     
     def __init__(self, nodeType):
         self.nodeType = nodeType

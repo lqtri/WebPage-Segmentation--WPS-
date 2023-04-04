@@ -1,18 +1,18 @@
-import time
-import functools
 import os
 import json
 
 from urllib.parse import urlparse
 from datetime import datetime
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from BlockExtraction import BlockExtraction
-from BlockVo import BlockVo
-
 from ImageOut import ImageOut
-from CssBox import CssBox
 from DomNode import DomNode
+
+
+def toHTMLFile(page_source):
+    with open("page_source.html", "w") as file:
+        file.write(str(page_source))
+    file.close()
 
 
 class Wpsdb:
@@ -27,10 +27,10 @@ class Wpsdb:
     cssBoxList = dict()
     nodeList = []
     count3 = 0
-    
+
     def __init__(self, urlStr):
         self.setUrl(urlStr)
-        
+
         print("Web driver setting...")
         self.setDriver()
         print("Done!\n")
@@ -45,13 +45,13 @@ class Wpsdb:
         print("Done!\n")
 
         self.recList = []
-               
+
     def service(self):
         print("Block extracting...")
         be = BlockExtraction()
         block = be.service(self.url, self.nodeList)
         blockList = be.blockList
-        
+
         self.imgOut.outBlock(blockList, self.fileName, 0)
         return blockList
 
@@ -60,88 +60,79 @@ class Wpsdb:
             if blockVo.Doc < self.PDoc:
                 return True
         return False
-    
+
     def setUrl(self, urlStr):
         try:
             if urlStr.startswith('https://') or urlStr.startswith('http://'):
                 self.url = urlStr
             else:
-                self.url = 'http://' + urlStr                
+                self.url = 'http://' + urlStr
             parse_object = urlparse(self.url)
-            newpath = r'Screenshots/'+ parse_object.netloc +'_'+str(datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) +'/'
+            newpath = r'Snapshots/' + parse_object.netloc + '_' + str(
+                datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + '/'
             self.fileName = newpath + parse_object.netloc
             os.makedirs(newpath)
         except (TypeError, AttributeError):
-            print ("Invalid address: " + str(urlStr))
-      
+            print("Invalid address: " + str(urlStr))
+
     def setDriver(self):
-        CHROME_PATH = r"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-        CHROMEDRIVER_PATH = r"/usr/local/bin/chromedriver"
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument('--headless')
-        self.browser = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
-        
+        firefox_options = webdriver.FirefoxOptions()
+        firefox_options.add_argument('--headless')
+        self.browser = webdriver.Firefox(executable_path='/usr/local/bin/geckodriver', options=firefox_options)
+        self.browser.implicitly_wait(1000)
 
     def toDOM(self, obj, parentNode=None):
-        if (isinstance(obj,str)):
-            json_obj = json.loads(obj) 
+        if isinstance(obj, str):
+            json_obj = json.loads(obj)
         else:
             json_obj = obj
         nodeType = json_obj['nodeType']
         node = DomNode(nodeType)
-        if nodeType == 1: #ELEMENT NODE
+        if nodeType == 1:  # ELEMENT NODE
             node.createElement(json_obj['tagName'])
             attributes = json_obj['attributes']
-            if attributes != None:
+            if attributes is not None:
                 node.setAttributes(attributes)
             visual_cues = json_obj['visual_cues']
-            if visual_cues != None:
+            if visual_cues is not None:
                 node.setVisual_cues(visual_cues)
         elif nodeType == 3:
             node.createTextNode(json_obj['nodeValue'], parentNode)
-            if node.parentNode != None:
+            if node.parentNode is not None:
                 visual_cues = node.parentNode.visual_cues
-                if visual_cues != None:
-                    node.setVisual_cues(visual_cues)    
+                if visual_cues is not None:
+                    node.setVisual_cues(visual_cues)
         else:
             return node
-            
+
         self.nodeList.append(node)
         if nodeType == 1:
             childNodes = json_obj['childNodes']
             for i in range(0, len(childNodes)):
-                if(childNodes[i]['nodeType'] == 1):
-                    node.appendChild(self.toDOM(childNodes[i],node))
+                if childNodes[i]['nodeType'] == 1:
+                    node.appendChild(self.toDOM(childNodes[i], node))
                 if childNodes[i]['nodeType'] == 3:
                     try:
                         if not childNodes[i]['nodeValue'].isspace():
-                            node.appendChild(self.toDOM(childNodes[i],node))
+                            node.appendChild(self.toDOM(childNodes[i], node))
                     except KeyError:
                         print('abnormal text node')
-                    
-        return node
-    
-    def toHTMLFile(self, page_source):
-        with open("page_source.html", "w") as file:
-            file.write(str(page_source))
-        
-    def getDomTree(self):
-        self.browser.get(self.url) 
-        time.sleep(3)      
 
+        return node
+
+    def getDomTree(self):
         file = open("dom.js", 'r')
         jscript = file.read()
+        file.close()
+
         jscript += '\nreturn JSON.stringify(toJSON(document.getElementsByTagName("BODY")[0]));'
         x = self.browser.execute_script(jscript)
+
+        json_object = json.dumps(x, indent=4)
+        with open(self.fileName + "_dom.json", "w") as file:
+            file.write(json_object)
+        file.close()
+
+        # Kill driver
+        self.browser.close()
         self.toDOM(x)
-        
-    def setRound(self,round):
-        self.Round = round
-        
-    @staticmethod
-    def sepCompare(sep1, sep2):
-        if sep1.compareTo(sep2) < 0:
-            return -1
-        elif sep1.compareTo(sep2) > 0:
-            return 1
-        else: return 0

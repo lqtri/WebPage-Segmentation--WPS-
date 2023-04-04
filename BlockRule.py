@@ -154,7 +154,7 @@ class BlockRule:
         return False
     
     
-    """
+    """ 
     Rule 1: If the DOM node is not a text node and it has no valid children, 
     then this node cannot be divided and will be cut.
     """
@@ -162,10 +162,10 @@ class BlockRule:
     def rule1(block):
         node = block.boxs[0]
         if not BlockRule.isTextNode(node) and not BlockRule.hasValidChildNode(node):
+            print('Rule 1 violated')
             #question
-            block.parent.children.remove(block)
-            return False
-        return True
+            #block.parent.children.remove(block)
+        return False
     
     """ 
     Rule 2:If the DOM node has only one valid child and the child is not a text node, 
@@ -190,10 +190,10 @@ class BlockRule:
         result = True
         cnt = 0
         
-        for WpsdbBlock in block.children:
-            if WpsdbBlock.boxs[0].nodeName == node.nodeName:
+        for vipsBlock in block.children:
+            if vipsBlock.boxs[0].nodeName == node.nodeName:
                 result = True
-                BlockRule.isOnlyOneDomSubTree(node, WpsdbBlock.boxs[0],result)
+                BlockRule.isOnlyOneDomSubTree(node, vipsBlock.boxs[0],result)
                 
                 if result:
                     cnt+=1

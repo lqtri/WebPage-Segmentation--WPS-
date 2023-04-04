@@ -3,6 +3,42 @@ import numpy as np
 import copy as cp
 from sklearn.cluster import DBSCAN
 
+def visual_distance(b1, b2):
+    x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
+    y_cor = (b1.y-b2.y)*(b1.y+b1.height-b2.y-b2.height)
+    dx = np.where(x_cor <= 0, 0, min(abs(b1.x-b2.x),
+                    abs(b1.x+b1.width-b2.x-b2.width)))
+    dy = np.where(y_cor <= 0, 0, min(abs(b1.y-b2.y),
+                    abs(b1.y+b1.height-b2.y-b2.height)))
+    return dx + dy
+
+def logic_distance(b1, b2):
+    b1_path = []
+    temp1 = b1.parent
+    while temp1 != None:
+        b1_path.append(temp1)
+        temp1 = temp1.parent
+
+    step = 0
+    temp2 = b2.parent
+    while temp2 not in b1_path:
+        step += 1
+        temp2 = temp2.parent
+
+    idx = b1_path.index(temp2)
+    return abs(step+idx-1)
+
+def find_nearest_block(p, blocks):
+    block_id = 0
+    min_distance = visual_distance(p, blocks[0])
+
+    for i in range(1,len(blocks)):
+        dis = visual_distance(p, blocks[i])
+        if dis < min_distance:
+            min_distance = dis
+            block_id = i
+    return block_id
+            
 
 class Clustering:
     def __init__(self, blocks, pageWidth, pageHeight, domRoot):
@@ -13,6 +49,8 @@ class Clustering:
         self.pageHeight = pageHeight
         self.domRoot = domRoot
         self.alpha = (self.pageHeight) / self.find_depth_tree(self.domRoot)
+        self.maximum_distance = np.where(self.pageWidth < self.pageHeight, self.pageHeight/2, self.pageHeight)
+        #self.maximum_distance = self.pageWidth/2
 
     def cleanse(self):
         outlier_blocks = []
@@ -21,31 +59,6 @@ class Clustering:
                 outlier_blocks.append(cp.deepcopy(block))
                 self.blocks.remove(block)
         return outlier_blocks
-
-    def visual_distance(self, b1, b2):
-        x_cor = (b1.x-b2.x)*(b1.x+b1.width-b2.x-b2.width)
-        y_cor = (b1.y-b2.y)*(b1.y+b1.height-b2.y-b2.height)
-        dx = np.where(x_cor <= 0, 0, min(abs(b1.x-b2.x),
-                      abs(b1.x+b1.width-b2.x-b2.width)))
-        dy = np.where(y_cor <= 0, 0, min(abs(b1.y-b2.y),
-                      abs(b1.y+b1.height-b2.y-b2.height)))
-        return dx + dy
-
-    def logic_distance(self, b1, b2):
-        b1_path = []
-        temp1 = b1.parent
-        while temp1 != None:
-            b1_path.append(temp1)
-            temp1 = temp1.parent
-
-        step = 0
-        temp2 = b2.parent
-        while temp2 not in b1_path:
-            step += 1
-            temp2 = temp2.parent
-
-        idx = b1_path.index(temp2)
-        return abs(step+idx-1)
 
     # STAGE 1
     def find_depth_tree(self, root):
@@ -89,15 +102,16 @@ class Clustering:
 
         for i in range(0, self.n):
             for j in range(i+1, self.n):
-                visual_distance = self.visual_distance(blocks[i], blocks[j]) * self.n/self.alpha
-                logic_distance = self.logic_distance(blocks[i], blocks[j])
-                if visual_distance < self.pageHeight/2:
+                vs_distance = visual_distance(blocks[i], blocks[j]) * self.n/self.alpha
+                lg_distance = logic_distance(blocks[i], blocks[j])
+
+                if vs_distance < self.maximum_distance:
                     valid_distance_count += 1
-                    total_valid_distance += visual_distance
+                    total_valid_distance += vs_distance
 
                 alignment_distance = self.isAlign(blocks[i], blocks[j])
-                dist = visual_distance + self.alpha * \
-                    (logic_distance * (2-alignment_distance)/2)
+                dist = vs_distance + self.alpha * \
+                    (lg_distance * (2-alignment_distance)/2)
 
                 matrix[i][j] = matrix[j][i] = np.where(dist > 0, dist, 0)
 
@@ -145,8 +159,7 @@ class Clustering:
             i += 1
 
     def DBSCAN(self):
-        similarity_matrix, average_distance = self.similarity_distance_matrix(
-            self.blocks)
+        similarity_matrix, average_distance = self.similarity_distance_matrix(self.blocks)
         clustering = DBSCAN(eps=average_distance, min_samples=2,
                             algorithm='brute', metric='precomputed').fit(similarity_matrix)
         labels = clustering.labels_
@@ -159,13 +172,11 @@ class Clustering:
         # Add cluster candidate
         for i in range(max_cluster_index+1):
             element_indices = self.get_indice(labels, i)
-            new_blocks_list.append(self.merge_blocks(
-                self.get_elements(self.blocks, element_indices)))
+            new_blocks_list.append(self.merge_blocks(self.get_elements(self.blocks, element_indices)))
 
         self.blocks = new_blocks_list
         self.n = len(new_blocks_list)
 
-        # Remove blocks which inside other
-        self.insideBlocksRemove()
-
+        # # Remove blocks which inside other
+        # self.insideBlocksRemove()
         return labels
